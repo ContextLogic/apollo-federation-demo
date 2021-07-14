@@ -76,8 +76,7 @@ and you should see
             "upc": "1",
             "price": 899,
             "weight": 100,
-            "shippingEstimate": 50,
-            "cost": 449.5
+            "shippingEstimate": 50
           },
           "author": {
             "username": "@ada"
@@ -90,8 +89,7 @@ and you should see
             "upc": "2",
             "price": 1299,
             "weight": 1000,
-            "shippingEstimate": 0,
-            "cost": 649.5
+            "shippingEstimate": 0
           },
           "author": {
             "username": "@ada"
