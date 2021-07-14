@@ -33,12 +33,12 @@ npm run start-gateway
 This will start up the gateway and serve it at http://localhost:4000
 
 ### Managed mode
-This example runs Apollo Federation by the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
+This example runs Apollo Federation with the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
 
 ```sh
 rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
 ```
-to update supergraph, without a need to restart the gateway service. Subgraph services might need to be reloaded by simply do `npm run start-services` again.
+to update supergraph, **without a need to restart the gateway service**. Subgraph services might need to be reloaded to understand the new subgraph by simply do `npm run start-services` again.
 
 ### Sample query
 ```
