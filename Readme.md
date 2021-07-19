@@ -33,12 +33,12 @@ npm run start-gateway
 This will start up the gateway and serve it at http://localhost:4000
 
 ### Managed mode
-This example runs Apollo Federation by the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
+This example runs Apollo Federation with the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
 
 ```sh
 rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
 ```
-to update supergraph, without a need to restart the gateway service. Subgraph services might need to be reloaded by simply do `npm run start-services` again.
+to update supergraph, **without a need to restart the gateway service**. Subgraph services might need to be reloaded to understand the new subgraph by simply do `npm run start-services` again.
 
 ### Sample query
 ```
@@ -76,8 +76,7 @@ and you should see
             "upc": "1",
             "price": 899,
             "weight": 100,
-            "shippingEstimate": 50,
-            "cost": 449.5
+            "shippingEstimate": 50
           },
           "author": {
             "username": "@ada"
@@ -90,8 +89,7 @@ and you should see
             "upc": "2",
             "price": 1299,
             "weight": 1000,
-            "shippingEstimate": 0,
-            "cost": 649.5
+            "shippingEstimate": 0
           },
           "author": {
             "username": "@ada"
@@ -105,7 +103,7 @@ and you should see
 
 ### What is this?
 
-This demo showcases four partial schemas running as federated microservices. Each of these schemas can be accessed on their own and form a partial shape of an overall schema. The gateway fetches the service capabilities from the running services to create an overall composed schema which can be queried.
+This demo showcases four partial schemas running as federated microservices. Each of these schemas can be accessed on their own and form a partial shape of an overall schema. The gateway fetches the composed supergraph at runtime without a need to reload.
 
 To see the query plan when running queries against the gateway, click on the `Query Plan` tab in the bottom right hand corner of [GraphQL Playground](http://localhost:4000)
 
