@@ -19,6 +19,7 @@
     "@apollo/gateway": "latest",
     "apollo-server": "latest",
     "graphql": "latest",
+    "make-fetch-happen": "latest",
     "md5": "^2.3.0"
   }
 }

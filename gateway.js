@@ -1,11 +1,17 @@
 const { ApolloServer } = require("apollo-server");
-const { ApolloGateway } = require("@apollo/gateway");
+const { ApolloGateway, RemoteGraphQLDataSource } = require("@apollo/gateway");
 const { join } = require("path")
 const { readFileSync } = require("fs")
 const md5 = require("md5")
+const { ApolloServerPluginLandingPageGraphQLPlayground } = require('apollo-server-core');
 
 //const supergraphSchema = readFileSync(join(__dirname, "supergraph.graphql")).toString();
 //console.log(`Using super graph: ${supergraphSchema}`)
+
+class RemoteGraphQLDataSourceWithCustomizedFetcher extends RemoteGraphQLDataSource {
+  fetcher = require("./node_modules/make-fetch-happen").defaults({
+  })
+}
 
 const gateway = new ApolloGateway({
   // // This entire `serviceList` is optional when running in managed federation
@@ -38,6 +44,10 @@ const gateway = new ApolloGateway({
 
   // Experimental: Enabling this enables the query plan view in Playground.
   __exposeQueryPlanExperimental: true,
+
+  // https://github.com/apollographql/federation/pull/188 for more information about customizing own fetcher
+  // this is useful when needing to adjust retry policy and enabling TLS
+  buildService: ({ url }) => new RemoteGraphQLDataSourceWithCustomizedFetcher({ url }),
 });
 
 (async () => {
@@ -51,6 +61,13 @@ const gateway = new ApolloGateway({
 
     // Subscriptions are unsupported but planned for a future Gateway version.
     subscriptions: false,
+
+    plugins: [
+      // To see the query plan, we have to replicate the legacy playground
+      // https://www.apollographql.com/docs/apollo-server/testing/build-run-queries/#graphql-playground
+      ApolloServerPluginLandingPageGraphQLPlayground({
+      })
+    ]
   });
 
   server.listen().then(({ url }) => {
