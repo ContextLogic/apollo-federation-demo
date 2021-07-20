@@ -38,6 +38,7 @@ type Config struct {
 
 type ResolverRoot interface {
 	Entity() EntityResolver
+	Product() ProductResolver
 }
 
 type DirectiveRoot struct {
@@ -68,6 +69,10 @@ type ComplexityRoot struct {
 
 type EntityResolver interface {
 	FindProductByUpc(ctx context.Context, upc string) (*model.Product, error)
+}
+type ProductResolver interface {
+	InStock(ctx context.Context, obj *model.Product) (bool, error)
+	ShippingEstimate(ctx context.Context, obj *model.Product) (float64, error)
 }
 
 type executableSchema struct {
@@ -493,14 +498,14 @@ func (ec *executionContext) _Product_inStock(ctx context.Context, field graphql.
 		Object:     "Product",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.InStock, nil
+		return ec.resolvers.Product().InStock(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -528,14 +533,14 @@ func (ec *executionContext) _Product_shippingEstimate(ctx context.Context, field
 		Object:     "Product",
 		Field:      field,
 		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ShippingEstimate, nil
+		return ec.resolvers.Product().ShippingEstimate(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1897,28 +1902,46 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 		case "upc":
 			out.Values[i] = ec._Product_upc(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "weight":
 			out.Values[i] = ec._Product_weight(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "price":
 			out.Values[i] = ec._Product_price(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				invalids++
+				atomic.AddUint32(&invalids, 1)
 			}
 		case "inStock":
-			out.Values[i] = ec._Product_inStock(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Product_inStock(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		case "shippingEstimate":
-			out.Values[i] = ec._Product_shippingEstimate(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			field := field
+			out.Concurrently(i, func() (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Product_shippingEstimate(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}

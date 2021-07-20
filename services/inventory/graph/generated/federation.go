@@ -50,7 +50,6 @@ func (ec *executionContext) __resolve_entities(ctx context.Context, representati
 			if err != nil {
 				return nil, err
 			}
-			fmt.Println(entity)
 
 			entity.Price, err = ec.unmarshalNInt2int(ctx, rep["price"])
 			if err != nil {

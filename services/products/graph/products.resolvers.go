@@ -5,14 +5,11 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/ContextLogic/products/graph/generated"
 	"github.com/ContextLogic/products/graph/model"
 )
 
 func (r *queryResolver) TopProducts(ctx context.Context, first *int) ([]*model.Product, error) {
-	fmt.Println("TopProducts")
 	if *first >= len(products) {
 		return products, nil
 	}
