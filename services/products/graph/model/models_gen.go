@@ -3,10 +3,9 @@
 package model
 
 type Product struct {
-	Upc    string `json:"upc"`
-	Name   string `json:"name"`
-	Price  int    `json:"price"`
-	Weight int    `json:"weight"`
+	Upc   string `json:"upc"`
+	Name  string `json:"name"`
+	Price int    `json:"price"`
 }
 
 func (Product) IsEntity() {}

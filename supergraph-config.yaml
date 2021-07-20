@@ -11,7 +11,7 @@ subgraphs:
     routing_url: http://localhost:4003/query
     schema:
       file: ./services/products/graph/products.graphql
-  inventory:
-    routing_url: http://localhost:4002/query
-    schema:
-      file: ./services/inventory/graph/inventory.graphql
+  # inventory:
+  #   routing_url: http://localhost:4002/query
+  #   schema:
+  #     file: ./services/inventory/graph/inventory.graphql

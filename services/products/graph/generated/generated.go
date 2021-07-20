@@ -50,10 +50,9 @@ type ComplexityRoot struct {
 	}
 
 	Product struct {
-		Name   func(childComplexity int) int
-		Price  func(childComplexity int) int
-		Upc    func(childComplexity int) int
-		Weight func(childComplexity int) int
+		Name  func(childComplexity int) int
+		Price func(childComplexity int) int
+		Upc   func(childComplexity int) int
 	}
 
 	Query struct {
@@ -121,13 +120,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Product.Upc(childComplexity), true
-
-	case "Product.weight":
-		if e.complexity.Product.Weight == nil {
-			break
-		}
-
-		return e.complexity.Product.Weight(childComplexity), true
 
 	case "Query.topProducts":
 		if e.complexity.Query.TopProducts == nil {
@@ -225,9 +217,7 @@ type Product @key(fields: "upc") {
   upc: String!
   name: String!
   price: Int!
-  weight: Int!
-}
-`, BuiltIn: false},
+}`, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
 scalar _Any
 scalar _FieldSet
@@ -493,41 +483,6 @@ func (ec *executionContext) _Product_price(ctx context.Context, field graphql.Co
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Price, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Product_weight(ctx context.Context, field graphql.CollectedField, obj *model.Product) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Product",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Weight, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1937,11 +1892,6 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "price":
 			out.Values[i] = ec._Product_price(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "weight":
-			out.Values[i] = ec._Product_weight(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}

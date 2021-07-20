@@ -19,7 +19,6 @@ scalar join__FieldSet
 
 enum join__Graph {
   ACCOUNTS @join__graph(name: "accounts" url: "http://localhost:4001/query")
-  INVENTORY @join__graph(name: "inventory" url: "http://localhost:4002/query")
   PRODUCTS @join__graph(name: "products" url: "http://localhost:4003/query")
   REVIEWS @join__graph(name: "reviews" url: "http://localhost:4004/query")
 }
@@ -27,16 +26,12 @@ enum join__Graph {
 type Product
   @join__owner(graph: PRODUCTS)
   @join__type(graph: PRODUCTS, key: "upc")
-  @join__type(graph: INVENTORY, key: "upc")
   @join__type(graph: REVIEWS, key: "upc")
 {
-  inStock: Boolean! @join__field(graph: INVENTORY)
   name: String! @join__field(graph: PRODUCTS)
   price: Int! @join__field(graph: PRODUCTS)
   reviews: [Review] @join__field(graph: REVIEWS)
-  shippingEstimate: Float! @join__field(graph: INVENTORY, requires: "price weight")
   upc: String! @join__field(graph: PRODUCTS)
-  weight: Int! @join__field(graph: PRODUCTS)
 }
 
 type Query {
@@ -44,14 +39,10 @@ type Query {
   topProducts(first: Int = 5): [Product] @join__field(graph: PRODUCTS)
 }
 
-type Review
-  @join__owner(graph: REVIEWS)
-  @join__type(graph: REVIEWS, key: "id")
-{
-  author: User @join__field(graph: REVIEWS, provides: "username")
-  body: String! @join__field(graph: REVIEWS)
-  id: ID! @join__field(graph: REVIEWS)
-  product: Product @join__field(graph: REVIEWS)
+type Review {
+  author: User! @join__field(graph: REVIEWS, provides: "username")
+  body: String!
+  product: Product!
 }
 
 type User
@@ -60,7 +51,6 @@ type User
   @join__type(graph: REVIEWS, key: "id")
 {
   id: ID! @join__field(graph: ACCOUNTS)
-  name: String! @join__field(graph: ACCOUNTS)
   reviews: [Review] @join__field(graph: REVIEWS)
   username: String! @join__field(graph: ACCOUNTS)
 }
