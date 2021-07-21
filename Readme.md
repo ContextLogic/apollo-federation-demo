@@ -10,13 +10,13 @@ make install
 
 This will install the following:
 1. `rover` cli first in order to build supergraph
-2. node modules to run the apollo/gateway 
+2. node modules to run the apollo/gateway
 3. gqlgen binary to generate GraphQL resolvers for the Golang services
 
 ### Start Services
 
 ```sh
-make -j4 accounts inventory products reviews
+make all-services
 ```
 
 This command will run all of the microservices at once concurrently. They can be found at http://localhost:4001, http://localhost:4002, http://localhost:4003, and http://localhost:4004.
@@ -34,7 +34,7 @@ This will start up the gateway and serve it at http://localhost:4000
 This example runs Apollo Federation with the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
 
 ```sh
-make graph
+make supergraph
 ```
 
 to update supergraph, **without a need to restart the gateway service**. Subgraph service may need a restart to reflect the changes of the subgraph schema, by

@@ -7,5 +7,5 @@ type Product @key(fields: "upc") {
   name: String!
   price: Int!
   weight: Int!
-  cost: Int!
+  #cost: Int!
 }
