@@ -3,7 +3,7 @@ const { buildFederatedSchema } = require("@apollo/federation");
 const { join } = require("path")
 const { readFileSync } = require("fs")
 
-const typeDefs = gql`${readFileSync(join(__dirname, "inventory.graphql"), "utf8")}`;
+const typeDefs = gql`${readFileSync(join(__dirname, "graph/inventory.graphql"), "utf8")}`;
 
 const resolvers = {
   Product: {
@@ -31,7 +31,7 @@ const server = new ApolloServer({
   ])
 });
 
-server.listen({ port: 4004 }).then(({ url }) => {
+server.listen({ port: 4002 }).then(({ url }) => {
   console.log(`🚀 Server ready at ${url}`);
 });
 

@@ -5,14 +5,11 @@ package graph
 
 import (
 	"context"
-	"fmt"
-
 	"github.com/ContextLogic/accounts/graph/generated"
 	"github.com/ContextLogic/accounts/graph/model"
 )
 
 func (r *entityResolver) FindUserByID(ctx context.Context, id string) (*model.User, error) {
-	fmt.Printf("FindUserByID: %s\n", id)
 	for _, user := range users {
 		if user.ID == id {
 			return user, nil
