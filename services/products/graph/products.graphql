@@ -4,8 +4,8 @@ extend type Query {
 
 type Product @key(fields: "upc") {
   upc: String!
-  name: String
-  price: Int
-  weight: Int
-  #cost: Float
+  name: String!
+  price: Int!
+  weight: Int!
+  cost: Int!
 }

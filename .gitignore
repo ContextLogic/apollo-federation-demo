@@ -51,3 +51,7 @@ typings/
 
 # environment variables
 .env
+
+# IDE configs
+.idea
+services/*/.idea

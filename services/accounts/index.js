@@ -3,7 +3,7 @@ const { buildFederatedSchema } = require("@apollo/federation");
 const { join } = require("path")
 const { readFileSync } = require("fs")
 
-const typeDefs = gql`${readFileSync(join(__dirname, "accounts.graphql"), "utf8")}`;
+const typeDefs = gql`${readFileSync(join(__dirname, "graph/accounts.graphql"), "utf8")}`;
 
 const resolvers = {
   Query: {

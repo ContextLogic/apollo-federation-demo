@@ -1,17 +1,17 @@
 subgraphs:
   accounts:
-    routing_url: http://localhost:4001/graphql
+    routing_url: http://localhost:4001/query
     schema:
-      file: ./services/accounts/accounts.graphql
+      file: ./services/accounts/graph/accounts.graphql
   reviews:
-    routing_url: http://localhost:4002/graphql
+    routing_url: http://localhost:4004/query
     schema:
-      file: ./services/reviews/reviews.graphql
+      file: ./services/reviews/graph/reviews.graphql
   products:
-    routing_url: http://localhost:4003/graphql
+    routing_url: http://localhost:4003/query
     schema:
-      file: ./services/products/products.graphql
+      file: ./services/products/graph/products.graphql
   inventory:
-    routing_url: http://localhost:4004/graphql
+    routing_url: http://localhost:4002/query
     schema:
-      file: ./services/inventory/inventory.graphql
+      file: ./services/inventory/graph/inventory.graphql
