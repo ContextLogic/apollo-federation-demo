@@ -7,7 +7,6 @@ type Product struct {
 	Name   string `json:"name"`
 	Price  int    `json:"price"`
 	Weight int    `json:"weight"`
-	Cost   int    `json:"cost"`
 }
 
 func (Product) IsEntity() {}

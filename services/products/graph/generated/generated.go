@@ -50,7 +50,6 @@ type ComplexityRoot struct {
 	}
 
 	Product struct {
-		Cost   func(childComplexity int) int
 		Name   func(childComplexity int) int
 		Price  func(childComplexity int) int
 		Upc    func(childComplexity int) int
@@ -101,13 +100,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Entity.FindProductByUpc(childComplexity, args["upc"].(string)), true
-
-	case "Product.cost":
-		if e.complexity.Product.Cost == nil {
-			break
-		}
-
-		return e.complexity.Product.Cost(childComplexity), true
 
 	case "Product.name":
 		if e.complexity.Product.Name == nil {
@@ -234,7 +226,7 @@ type Product @key(fields: "upc") {
   name: String!
   price: Int!
   weight: Int!
-  cost: Int!
+  #cost: Int!
 }
 `, BuiltIn: false},
 	{Name: "federation/directives.graphql", Input: `
@@ -537,41 +529,6 @@ func (ec *executionContext) _Product_weight(ctx context.Context, field graphql.C
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
 		return obj.Weight, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) _Product_cost(ctx context.Context, field graphql.CollectedField, obj *model.Product) (ret graphql.Marshaler) {
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	fc := &graphql.FieldContext{
-		Object:     "Product",
-		Field:      field,
-		Args:       nil,
-		IsMethod:   false,
-		IsResolver: false,
-	}
-
-	ctx = graphql.WithFieldContext(ctx, fc)
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Cost, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1986,11 +1943,6 @@ func (ec *executionContext) _Product(ctx context.Context, sel ast.SelectionSet, 
 			}
 		case "weight":
 			out.Values[i] = ec._Product_weight(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
-		case "cost":
-			out.Values[i] = ec._Product_cost(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
