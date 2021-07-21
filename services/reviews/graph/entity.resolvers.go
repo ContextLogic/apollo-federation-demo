@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/ContextLogic/reviews/graph/generated"
 	"github.com/ContextLogic/reviews/graph/model"
 )

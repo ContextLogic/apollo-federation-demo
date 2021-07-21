@@ -5,6 +5,7 @@ package graph
 
 import (
 	"context"
+
 	"github.com/ContextLogic/inventory/graph/generated"
 	"github.com/ContextLogic/inventory/graph/model"
 )
