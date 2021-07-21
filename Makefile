@@ -6,7 +6,7 @@ install: ## install required deps/tools for this demo
 	@npm install 
 	@go get github.com/99designs/gqlgen
 
-graph: install-rover ## run rover to compose the supergraph
+graph: ## run rover to compose the supergraph
 	@rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
 
 gqlgen-accounts: ## run gqlgen generate for accounts service

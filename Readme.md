@@ -4,30 +4,28 @@ This repository is a demo of using Apollo Federation to build a single schema on
 
 ### Installation
 
-Install `rover` cli first in order to build supergraph
-
 ```sh
-npm install -g @apollo/rover
+make install
 ```
 
-To run this demo locally, pull down the repository then run the following commands:
+This will install the following:
+1. `rover` cli first in order to build supergraph
+2. node modules to run the apollo/gateway 
+3. gqlgen binary to generate GraphQL resolvers for the Golang services
+
+### Start Services
 
 ```sh
-npm install
+make -j4 accounts inventory products reviews
 ```
 
-This will install all of the dependencies for the gateway and each underlying service.
+This command will run all of the microservices at once concurrently. They can be found at http://localhost:4001, http://localhost:4002, http://localhost:4003, and http://localhost:4004.
 
-```sh
-npm run start-services
-```
-
-This command will run all of the microservices at once. They can be found at http://localhost:4001, http://localhost:4002, http://localhost:4003, and http://localhost:4004.
-
+### Start Gateway
 In another terminal window, run the gateway by running this command:
 
 ```sh
-npm run start-gateway
+make gateway
 ```
 
 This will start up the gateway and serve it at http://localhost:4000
@@ -36,9 +34,14 @@ This will start up the gateway and serve it at http://localhost:4000
 This example runs Apollo Federation with the managed mode by periodically polling supergraph from `./supergraph.graphql` at runtime. If you update subgraph services, you can simply run
 
 ```sh
-rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
+make graph
 ```
-to update supergraph, **without a need to restart the gateway service**. Subgraph services might need to be reloaded to understand the new subgraph by simply do `npm run start-services` again.
+
+to update supergraph, **without a need to restart the gateway service**. Subgraph service may need a restart to reflect the changes of the subgraph schema, by
+```sh
+make $(service_name)
+```
+
 
 ### Sample query
 ```
