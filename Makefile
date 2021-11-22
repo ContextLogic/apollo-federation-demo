@@ -4,7 +4,7 @@ help: ## show the help
 install: ## install required deps/tools for this demo
 	@npm install -g @apollo/rover
 	@npm install
-	@go get github.com/99designs/gqlgen
+	@go get github.com/99designs/gqlgen@v0.13.0
 
 supergraph: ## run rover to compose the supergraph
 	@rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
